@@ -21,18 +21,13 @@
     <div id="hitokoto"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('https://v1.hitokoto.cn/?c=d&encode=json')
+            fetch('https://v1.hitokoto.cn/?c=d&encode=json&lang=tw')
                 .then(response => response.json())
                 .then(data => {
-                    // 創建 OpenCC 轉換器，從簡體轉繁體
-                    const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-                    // 將名言和出處轉換為繁體
-                    const hitokotoTW = converter(data.hitokoto);
-                    const fromTW = converter(data.from);
                     const hitokotoElement = document.getElementById('hitokoto');
                     hitokotoElement.innerHTML = `
-                        <p>${hitokotoTW}</p>
-                        <p>—— 《${fromTW}》</p>
+                        <p>${data.hitokoto}</p>
+                        <p>—— 《${data.from}》</p>
                     `;
                 })
                 .catch(error => {
