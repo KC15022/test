@@ -2,41 +2,37 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <title>繁體中文名言</title>
-    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>名言佳句</title>
+    <style>
+        #hitokoto {
+            font-size: 18px;
+            font-style: italic;
+            text-align: center;
+            margin: 20px;
+        }
+        #hitokoto p {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
-    <p id="quote"></p>
-    <p id="source"></p>
-    <button onclick="displayQuote()">獲取名言</button>
-
+    <div id="hitokoto"></div>
     <script>
-        async function getQuote() {
-            try {
-                const response = await fetch('https://v1.hitokoto.cn/');
-                if (!response.ok) {
-                    throw new Error('無法獲取名言');
-                }
-                const data = await response.json();
-                const quote = data.hitokoto;
-                const source = data.from;
-
-                const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-                const quoteTW = converter(quote);
-                const sourceTW = converter(source);
-
-                return { quote: quoteTW, source: sourceTW };
-            } catch (error) {
-                console.error('獲取名言時出錯:', error);
-                return { quote: '無法獲取名言，請稍後再試', source: '' };
-            }
-        }
-
-        async function displayQuote() {
-            const { quote, source } = await getQuote();
-            document.getElementById('quote').textContent = quote;
-            document.getElementById('source').textContent = source;
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('https://v1.hitokoto.cn/?c=a&encode=json')
+                .then(response => response.json())
+                .then(data => {
+                    const hitokotoElement = document.getElementById('hitokoto');
+                    hitokotoElement.innerHTML = `
+                        <p>${data.hitokoto}</p>
+                        <p>—— 《${data.from}》</p>
+                    `;
+                })
+                .catch(error => {
+                    console.error('獲取名言失敗:', error);
+                });
+        });
     </script>
 </body>
 </html>
