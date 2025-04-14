@@ -6,8 +6,8 @@
     <title>名言佳句</title>
     <style>
         #hitokoto {
-            font-size: 18px;
-            font-style: italic;
+            font-family: 'DFKai-SB', 'KaiTi', 'STKaiti', 'cwTeXKai', serif;
+            font-size: 24px;
             text-align: center;
             margin: 20px;
         }
@@ -15,18 +15,21 @@
             margin: 5px 0;
         }
     </style>
+    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
 </head>
 <body>
     <div id="hitokoto"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('https://v1.hitokoto.cn/?c=a&encode=json')
+            const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+            fetch('https://v1.hitokoto.cn/?c=d&encode=json')
                 .then(response => response.json())
                 .then(data => {
-                    const hitokotoElement = document.getElementById('hitokoto');
-                    hitokotoElement.innerHTML = `
-                        <p>${data.hitokoto}</p>
-                        <p>—— 《${data.from}》</p>
+                    const hitokoto = converter(data.hitokoto);
+                    const from = converter(data.from);
+                    document.getElementById('hitokoto').innerHTML = `
+                        <p>${hitokoto}</p>
+                        <p>—— 《${from}》</p>
                     `;
                 })
                 .catch(error => {
