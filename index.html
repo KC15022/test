@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>名言佳句</title>
+    <!-- 引入Google Fonts的Ma Shan Zheng書法字體 -->
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
     <style>
         #hitokoto {
+            font-family: 'Ma Shan Zheng', cursive; /* 使用書法字體 */
             font-size: 18px;
             font-style: italic;
             text-align: center;
@@ -15,9 +18,8 @@
             margin: 5px 0;
         }
     </style>
-
-<script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
-    
+    <!-- 引入opencc-js庫用於簡繁轉換 -->
+    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
 </head>
 <body>
     <div id="hitokoto"></div>
@@ -26,10 +28,16 @@
             fetch('https://v1.hitokoto.cn/?c=d&encode=json')
                 .then(response => response.json())
                 .then(data => {
+                    // 創建簡體到繁體的轉換器
+                    const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+                    // 將名言佳句和出處轉換為繁體字
+                    const traditionalHitokoto = converter(data.hitokoto);
+                    const traditionalFrom = converter(data.from);
                     const hitokotoElement = document.getElementById('hitokoto');
+                    // 顯示轉換後的繁體文字
                     hitokotoElement.innerHTML = `
-                        <p>${data.hitokoto}</p>
-                        <p>—— 《${data.from}》</p>
+                        <p>${traditionalHitokoto}</p>
+                        <p>—— 《${traditionalFrom}》</p>
                     `;
                 })
                 .catch(error => {
