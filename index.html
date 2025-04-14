@@ -36,6 +36,22 @@
                     console.error('獲取名言失敗:', error);
                 });
         });
+
+
+// 創建簡體字到繁體字的轉換器
+const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+
+// 定義轉換函數
+function convertToTraditionalChinese(simplifiedText) {
+    return converter(simplifiedText);
+}
+
+// 範例使用
+const simplified = "汉字";
+const traditional = convertToTraditionalChinese(simplified);
+console.log(traditional);  // 輸出: 漢字
+
+        
     </script>
 </body>
 </html>
