@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <title>隨機名言生成器</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            padding: 2rem;
+        }
+        #quote-container {
+            max-width: 600px;
+            margin: 2rem;
+            padding: 2rem;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        #quote {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        #author {
+            font-style: italic;
+            color: #666;
+        }
+        button {
+            padding: 0.8rem 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>每日隨機名言</h1>
+    <div id="quote-container">
+        <p id="quote">點擊按鈕獲取名言</p>
+        <p id="author"></p>
+    </div>
+    <button onclick="getQuote()">獲取新名言</button>
+
+    <script>
+        // 使用 Quotable.io 的免費 API
+        const API_URL = 'https://api.quotable.io/random';
+
+        // 獲取名言的函數
+        async function getQuote() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                // 更新頁面內容
+                document.getElementById('quote').textContent = data.content;
+                document.getElementById('author').textContent = `- ${data.author}`;
+            } catch (error) {
+                console.error('獲取名言時出錯:', error);
+                document.getElementById('quote').textContent = '暫時無法獲取名言，請稍後重試';
+            }
+        }
+
+        // 頁面載入時自動獲取第一條名言
+        window.onload = getQuote;
+    </script>
+</body>
+</html>
