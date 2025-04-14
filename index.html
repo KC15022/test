@@ -15,9 +15,7 @@
             margin: 5px 0;
         }
     </style>
-
-<script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
-    
+    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
 </head>
 <body>
     <div id="hitokoto"></div>
@@ -26,18 +24,19 @@
             fetch('https://v1.hitokoto.cn/?c=d&encode=json')
                 .then(response => response.json())
                 .then(data => {
+                    const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
+                    const traditionalHitokoto = converter.convert(data.hitokoto);
+                    const traditionalFrom = converter.convert(data.from);
                     const hitokotoElement = document.getElementById('hitokoto');
                     hitokotoElement.innerHTML = `
-                        <p>${data.hitokoto}</p>
-                        <p>—— 《${data.from}》</p>
+                        <p>${traditionalHitokoto}</p>
+                        <p>—— 《${traditionalFrom}》</p>
                     `;
                 })
                 .catch(error => {
                     console.error('獲取名言失敗:', error);
                 });
         });
-
-        
     </script>
 </body>
 </html>
