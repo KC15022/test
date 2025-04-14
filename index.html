@@ -1,63 +1,39 @@
-<!DOCTYPE html>
+現時輸出的文字為簡體字，我希望一律改為繁體，另外，要用書法字體及CSS包裝。修訂後請輸出整個工具完整的函數：<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>名言佳句</title>
     <style>
-        /* 新增書法字體 */
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@500&display=swap');
-        
         #hitokoto {
-            font-size: 24px;
+            font-size: 18px;
+            font-style: italic;
             text-align: center;
-            margin: 40px auto;
-            max-width: 600px;
-            font-family: 'Noto Serif TC', serif; /* 應用書法字體 */
-            line-height: 1.8;
-            padding: 20px;
-            border-radius: 10px;
-            background: #f8f5e6;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px;
         }
-        
         #hitokoto p {
-            margin: 15px 0;
-            color: #4a4a4a;
-        }
-        
-        #hitokoto p:last-child {
-            font-size: 20px;
-            color: #666;
-            margin-top: 30px;
-            font-style: normal;
+            margin: 5px 0;
         }
     </style>
-    <script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
+
+<script src="https://unpkg.com/opencc-js@1.0.5/dist/umd/opencc-js.js"></script>
+    
 </head>
 <body>
     <div id="hitokoto"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 初始化簡轉繁轉換器
-            const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-            
             fetch('https://v1.hitokoto.cn/?c=d&encode=json')
                 .then(response => response.json())
                 .then(data => {
-                    // 進行簡轉繁處理
-                    const convertedHitokoto = converter(data.hitokoto);
-                    const convertedFrom = converter(data.from);
-                    
                     const hitokotoElement = document.getElementById('hitokoto');
                     hitokotoElement.innerHTML = `
-                        <p>${convertedHitokoto}</p>
-                        <p>——《${convertedFrom}》</p>
+                        <p>${data.hitokoto}</p>
+                        <p>—— 《${data.from}》</p>
                     `;
                 })
                 .catch(error => {
                     console.error('獲取名言失敗:', error);
-                    hitokotoElement.innerHTML = '<p>獲取名言時發生錯誤</p>';
                 });
         });
     </script>
