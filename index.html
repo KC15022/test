@@ -15,21 +15,22 @@
             margin: 5px 0;
         }
     </style>
-
-<script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/cn2t.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js"></script>
 </head>
 <body>
     <div id="hitokoto"></div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
             fetch('https://v1.hitokoto.cn/?c=d&encode=json')
                 .then(response => response.json())
                 .then(data => {
                     const hitokotoElement = document.getElementById('hitokoto');
+                    const convertedHitokoto = converter(data.hitokoto);
+                    const convertedFrom = converter(data.from);
                     hitokotoElement.innerHTML = `
-                        <p>${data.hitokoto}</p>
-                        <p>—— 《${data.from}》</p>
+                        <p>${convertedHitokoto}</p>
+                        <p>—— 《${convertedFrom}》</p>
                     `;
                 })
                 .catch(error => {
