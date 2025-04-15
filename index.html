@@ -22,7 +22,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-            fetch('https://v1.hitokoto.cn/?c=d,c=i&encode=json')
+            fetch('https://v1.hitokoto.cn/?c=d&encode=json')
                 .then(response => response.json())
                 .then(data => {
                     const hitokotoElement = document.getElementById('hitokoto');
