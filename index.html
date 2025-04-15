@@ -22,20 +22,31 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const converter = OpenCC.Converter({ from: 'cn', to: 'tw' });
-            fetch('https://v1.hitokoto.cn/?c=d&encode=json')
-                .then(response => response.json())
-                .then(data => {
-                    const hitokotoElement = document.getElementById('hitokoto');
-                    const convertedHitokoto = converter(data.hitokoto);
-                    const convertedFrom = converter(data.from);
-                    hitokotoElement.innerHTML = `
-                        <p>${convertedHitokoto}</p>
-                        <p>—— 《${convertedFrom}》</p>
-                    `;
-                })
-                .catch(error => {
-                    console.error('獲取名言失敗:', error);
-                });
+            const blacklist = ['魔道祖師', '天官賜福', '陳情令']; // 不想要的作品黑名單
+
+            function fetchHitokoto() {
+                fetch('https://v1.hitokoto.cn/?c=d&encode=json')
+                    .then(response => response.json())
+                    .then(data => {
+                        const convertedFrom = converter(data.from);
+                        // 檢查來源是否在黑名單中，若是則重新請求
+                        if (blacklist.some(item => convertedFrom.includes(item))) {
+                            fetchHitokoto(); // 重新獲取
+                        } else {
+                            const hitokotoElement = document.getElementById('hitokoto');
+                            const convertedHitokoto = converter(data.hitokoto);
+                            hitokotoElement.innerHTML = `
+                                <p>${convertedHitokoto}</p>
+                                <p>—— 《${convertedFrom}》</p>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('獲取名言失敗:', error);
+                    });
+            }
+
+            fetchHitokoto(); // 初次獲取
         });
     </script>
 </body>
